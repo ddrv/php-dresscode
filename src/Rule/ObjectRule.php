@@ -119,7 +119,7 @@ final class ObjectRule extends Rule
             }
         }
 
-        if ($this->additionalProperties && $additional) {
+        if (!is_null($this->additionalProperties) && $additional) {
             $rule = $this->ruleManager->getRule($this->additionalProperties);
             foreach ($additional as $property) {
                 $propertyPath = $path ? $path . '.' . $property : $property;
