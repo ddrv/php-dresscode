@@ -17,7 +17,7 @@ use Ddrv\DressCode\Format\UuidFormat;
 final class DressCode
 {
 
-    public const VERSION = '1.1.3';
+    public const VERSION = '1.1.4';
 
     private $formatManager;
 

@@ -28,9 +28,9 @@ final class ObjectRule extends Rule
     private $properties;
 
     /**
-     * @var string[]|null
+     * @var string[]
      */
-    private $required;
+    private $required = [];
 
     /**
      * @var bool
@@ -60,7 +60,9 @@ final class ObjectRule extends Rule
         parent::__construct($actions, $nullable);
         $this->ruleManager = $ruleManager;
         $this->properties = $properties;
-        $this->required = $required;
+        foreach ($required as $property) {
+            $this->required[$property] = true;
+        }
         $this->additionalProperties = $additionalProperties;
         $this->minProperties = $minProperties;
         $this->maxProperties = $maxProperties;
@@ -82,20 +84,24 @@ final class ObjectRule extends Rule
         if ($least || $upTo) {
             $errors[] = new InvalidObjectSize($path, $this->minProperties, $this->maxProperties);
         }
-        if ($this->required) {
-            foreach ($this->required as $property) {
-                if (!$this->hasProperty($value, $property)) {
-                    $errors[] = new ObjectHasNotRequiredProperty($path, $property);
-                }
-            }
-        }
 
         $additional = [];
         foreach ($value as $property => $v) {
             $additional[$property] = true;
         }
+
         if ($this->properties) {
             foreach ($this->properties as $property => $definition) {
+                if (array_key_exists('readOnly', $definition) && $definition['readOnly'] && $action->isInput()) {
+                    if (array_key_exists($property, $this->required)) {
+                        unset($this->required[$property]);
+                    }
+                }
+                if (array_key_exists('writeOnly', $definition) && $definition['writeOnly'] && $action->isOutput()) {
+                    if (array_key_exists($property, $this->required)) {
+                        unset($this->required[$property]);
+                    }
+                }
                 if ($this->hasProperty($value, $property)) {
                     if (array_key_exists($property, $additional)) {
                         unset($additional[$property]);
@@ -116,6 +122,12 @@ final class ObjectRule extends Rule
                         array_splice($errors, count($errors), 0, $e->getErrors());
                     }
                 }
+            }
+        }
+
+        foreach (array_keys($this->required) as $property) {
+            if (!$this->hasProperty($value, $property)) {
+                $errors[] = new ObjectHasNotRequiredProperty($path, $property);
             }
         }
 
