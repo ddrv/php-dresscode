@@ -4,6 +4,7 @@
   "description": "OpenAPI schema validator",
   "keywords": ["openapi", "validator", "swagger"],
   "license": "MIT",
+  "homepage": "https://dresscode.ddrv.ru/",
   "authors": [
     {
       "name": "Ivan Dudarev",
