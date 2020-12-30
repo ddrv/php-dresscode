@@ -121,9 +121,12 @@ final class ObjectRule extends Rule
 
         if (!is_null($this->additionalProperties) && $additional) {
             $rule = $this->ruleManager->getRule($this->additionalProperties);
-            foreach ($additional as $property) {
+            foreach (array_keys($additional) as $property) {
                 $propertyPath = $path ? $path . '.' . $property : $property;
-                $result[$property] = $rule->validate($action, $propertyPath, $this->getProperty($value, $property));
+                [$valid, $add] = $rule->validate($action, $propertyPath, $this->getProperty($value, $property));
+                if ($add) {
+                    $result[$property] = $valid;
+                }
             }
         }
         $this->throw($errors);
