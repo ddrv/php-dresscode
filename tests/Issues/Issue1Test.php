@@ -28,7 +28,7 @@ final class Issue1Test extends IssueTestCase
             "minLength": 6,
             "nullable": false
         },
-        "credated_at": {
+        "created_at": {
             "type": "string",
             "format": "date-time",
             "readOnly": true,
@@ -39,7 +39,7 @@ final class Issue1Test extends IssueTestCase
         "email",
         "login",
         "password",
-        "credated_at"
+        "created_at"
     ],
     "additionalProperties": {}
 }
