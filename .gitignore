@@ -1,0 +1,4 @@
+/vendor/
+/composer.lock
+/phpcs.xm
+/phpunit.xml
