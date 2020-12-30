@@ -51,11 +51,12 @@ final class DressCode
      * @param Action $action
      * @param array $rule
      * @param mixed $value
+     * @param string $path
      * @return mixed|null
      * @throws InvalidValueException
      */
-    public function validate(Action $action, array $rule, $value)
+    public function validate(Action $action, array $rule, $value, string $path = '')
     {
-        return $this->ruleManager->getRule($rule)->validate($action, '', $value)[0];
+        return $this->ruleManager->getRule($rule)->validate($action, $path, $value)[0];
     }
 }
