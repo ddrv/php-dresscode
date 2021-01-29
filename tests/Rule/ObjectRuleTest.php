@@ -53,6 +53,7 @@ final class ObjectRuleTest extends TestCase
             ],
             'bool' => [
                 'type' => 'boolean',
+                'nullable' => true,
             ],
         ];
         $required = ['str', 'int'];
@@ -72,7 +73,7 @@ final class ObjectRuleTest extends TestCase
     public function provideCorrectModel(): array
     {
         return [
-            [['str' => 'phpunit', 'int' => 1],                 null],
+            [['str' => 'phpunit', 'int' => 1, 'bool' => null], null],
             [['str' => 'phpunit', 'int' => 1, 'bool' => true], null],
         ];
     }

@@ -102,25 +102,27 @@ final class ObjectRule extends Rule
                         unset($this->required[$property]);
                     }
                 }
+                $hasDefault = array_key_exists('default', $definition);
+                $default = $hasDefault ? $definition['default'] : null;
+                $rule = $this->ruleManager->getRule($definition);
+                $propertyPath = $path ? $path . '.' . $property : $property;
+                $checked = $this->getProperty($value, $property, $default);
                 if ($this->hasProperty($value, $property)) {
                     if (array_key_exists($property, $additional)) {
                         unset($additional[$property]);
                     }
-                    $propertyPath = $path ? $path . '.' . $property : $property;
-                    $rule = $this->ruleManager->getRule($definition);
-                    $default = array_key_exists('default', $definition) ? $definition['default'] : null;
-                    try {
-                        [$valid, $add] = $rule->validate(
-                            $action,
-                            $propertyPath,
-                            $this->getProperty($value, $property, $default)
-                        );
-                        if ($add) {
-                            $result[$property] = $valid;
-                        }
-                    } catch (InvalidValueException $e) {
-                        array_splice($errors, count($errors), 0, $e->getErrors());
+                }
+                try {
+                    [$valid, $add] = $rule->validate(
+                        $action,
+                        $propertyPath,
+                        $checked
+                    );
+                    if ($add) {
+                        $result[$property] = $valid;
                     }
+                } catch (InvalidValueException $e) {
+                    array_splice($errors, count($errors), 0, $e->getErrors());
                 }
             }
         }
